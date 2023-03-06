@@ -7,7 +7,7 @@
 
 ## 下载
 
-![下载地址](https://github.com/lastIndexOf/ChatGPT-Client/releases/)
+[下载地址](https://github.com/lastIndexOf/ChatGPT-Client/releases/)
 
 ## 基础能力
 
