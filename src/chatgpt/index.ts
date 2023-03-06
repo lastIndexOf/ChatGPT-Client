@@ -3,7 +3,7 @@ import {
   Configuration,
   CreateChatCompletionResponse,
   OpenAIApi,
-} from "openai";
+} from 'openai';
 
 interface IChatGPTOptions {
   apiKey: string;
@@ -31,21 +31,21 @@ export class ChatGPT {
 
   private handleStreamData(stream: any): Promise<ChatCompletionRequestMessage> {
     let reply: ChatCompletionRequestMessage = {
-      role: "assistant",
-      content: "",
+      role: 'assistant',
+      content: '',
     };
-    process.stdout.write("Answer: ");
+    // process.stdout.write('Answer: ');
 
     return new Promise((resolve, reject) => {
       stream
-        .on("data", (data: Buffer) => {
+        .on('data', (data: Buffer) => {
           const text = data.toString();
-          const messages = text.split("data:").filter(Boolean);
+          const messages = text.split('data:').filter(Boolean);
 
           messages.forEach((m: string) => {
             const trimmed = m.trim();
 
-            if (trimmed === "[DONE]") {
+            if (trimmed === '[DONE]') {
               console.info();
               return resolve(reply);
             } else {
@@ -62,8 +62,10 @@ export class ChatGPT {
             }
           });
         })
-        .on("error", (err: Error) => {
-          reject(err);
+        .on('error', (err: Error) => {
+          const msg = `Request ChatGPT Api Error: ${err.message}. please input \`:clear\` clear context.`;
+          this._streamCallback?.(msg);
+          resolve(reply);
         });
     });
   }
@@ -73,26 +75,32 @@ export class ChatGPT {
   }
 
   public async sendMessage(message: string) {
-    this._messages.push({
-      role: "user",
-      content: message,
-    });
+    try {
+      this._messages.push({
+        role: 'user',
+        content: message,
+      });
 
-    const res = await this._api!.createChatCompletion(
-      {
-        model: "gpt-3.5-turbo",
-        messages: this._messages,
-        n: 1,
-        stream: true,
-      },
-      { responseType: "stream" }
-    );
+      const res = await this._api!.createChatCompletion(
+        {
+          model: 'gpt-3.5-turbo',
+          messages: this._messages,
+          n: 1,
+          stream: true,
+        },
+        { responseType: 'stream' }
+      );
 
-    const reply = await this.handleStreamData(res.data as any);
+      const reply = await this.handleStreamData(res.data as any);
 
-    this._messages.push(reply);
+      this._messages.push(reply);
 
-    return reply;
+      return reply;
+    } catch (err) {
+      const msg = `Request ChatGPT Api Error. please input \`:clear\` clear context.`;
+      this._streamCallback?.(msg);
+      return null;
+    }
   }
 
   public setStreamCallback(streamCallback: (data: string) => void) {
