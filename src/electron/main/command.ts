@@ -1,8 +1,8 @@
-import { BrowserWindow } from "electron";
-import { ChatGPT } from "../../chatgpt";
+import { BrowserWindow } from 'electron';
+import { ChatGPT } from '../../chatgpt';
 
 export enum Commands {
-  Clear = "clear",
+  Clear = 'clear',
 }
 
 export interface ICommandHandlerParams {
@@ -21,12 +21,12 @@ export const CommandHandler: {
   [command in Commands]: ICommandHandler;
 } = {
   [Commands.Clear]: {
-    tip: "",
+    tip: '',
     command: Commands.Clear,
     handler: (ctx: ICommandHandlerParams) => {
       const { win, chat, callback } = ctx;
       chat.clear();
-      win.webContents.send("clear", null);
+      win.webContents.send('clear', null);
       callback?.();
     },
   },
@@ -42,8 +42,8 @@ export const handleInputIfCommand = (
     handler: (ctx: ICommandHandlerParams) => void;
   } | null
 ] => {
-  if (input.startsWith(":")) {
-    const command: Commands = input.split(":")[1] as Commands;
+  if (input.startsWith(':')) {
+    const command: Commands = input.split(':')[1] as Commands;
     if (command in CommandHandler) {
       return [true, CommandHandler[command]];
     }
@@ -53,14 +53,16 @@ export const handleInputIfCommand = (
 };
 
 export const handleInputIfAlias = (input: string): string => {
-  if (input.startsWith("@")) {
-    const alias = input.split("@")[1];
+  if (input.startsWith('@')) {
+    const content = input.split('@')[1];
+    const [alias, ...rest] = content.split(' ');
+    const args = rest.join(' ');
     let customAliasList: any = {};
     try {
       customAliasList = JSON.parse(
-        require("fs").readFileSync(
-          require("path").join(require("os").homedir(), "./.chat/.alias.json"),
-          "utf-8"
+        require('fs').readFileSync(
+          require('path').join(require('os').homedir(), './.chat/.alias.json'),
+          'utf-8'
         )
       );
     } catch (err) {
@@ -68,7 +70,7 @@ export const handleInputIfAlias = (input: string): string => {
     }
 
     if (alias in customAliasList) {
-      return customAliasList[alias];
+      return customAliasList[alias].replace(/{{CONTENT}}/, args);
     }
   }
 

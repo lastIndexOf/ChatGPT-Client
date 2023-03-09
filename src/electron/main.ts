@@ -1,7 +1,7 @@
-import * as path from "path";
-import { app, screen, globalShortcut, BrowserWindow } from "electron";
-import { registerMainWinEvents } from "./main/event";
-import { defaultSize, SizeDetector } from "./main/size";
+import * as path from 'path';
+import { app, screen, globalShortcut, BrowserWindow } from 'electron';
+import { registerMainWinEvents } from './main/event';
+import { defaultSize, SizeDetector } from './main/size';
 
 let mainWindow: BrowserWindow;
 const sizeController = new SizeDetector();
@@ -21,23 +21,31 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile(path.join(__dirname, "./renderer/index.html"));
+  mainWindow.loadFile(path.join(__dirname, './renderer/index.html'));
 
   registerMainWinEvents(mainWindow, sizeController);
 }
 
-app.on("ready", () => {
+app.on('ready', () => {
   createWindow();
 
-  if (process.platform === "darwin") {
+  if (process.platform === 'darwin') {
     app.dock.hide();
   }
 
   // 全局快捷键
-  globalShortcut.register("CommandOrControl+Shift+Space", () => {
+  globalShortcut.register('Escape', () => {
     if (mainWindow.isVisible()) {
       mainWindow.hide();
-      if (process.platform === "darwin") {
+      if (process.platform === 'darwin') {
+        app.dock.hide();
+      }
+    }
+  });
+  globalShortcut.register('CommandOrControl+Shift+Space', () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+      if (process.platform === 'darwin') {
         app.dock.hide();
       }
     } else {
@@ -47,7 +55,7 @@ app.on("ready", () => {
   });
 });
 
-app.on("will-quit", () => {
+app.on('will-quit', () => {
   // 注销快捷键
   globalShortcut.unregisterAll();
 });
