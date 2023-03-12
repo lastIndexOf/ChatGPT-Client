@@ -1,5 +1,11 @@
 import * as path from 'path';
-import { app, screen, globalShortcut, BrowserWindow } from 'electron';
+import {
+  app,
+  screen,
+  globalShortcut,
+  BrowserWindow,
+  desktopCapturer,
+} from 'electron';
 import { registerMainWinEvents } from './main/event';
 import { defaultSize, SizeDetector } from './main/size';
 
@@ -29,6 +35,8 @@ function createWindow() {
 app.on('ready', () => {
   createWindow();
 
+  mainWindow.setVisibleOnAllWorkspaces(true);
+
   if (process.platform === 'darwin') {
     app.dock.hide();
   }
@@ -41,7 +49,6 @@ app.on('ready', () => {
         app.dock.hide();
       }
     } else {
-      mainWindow.setVisibleOnAllWorkspaces(true);
       mainWindow.show();
     }
   });
