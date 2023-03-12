@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { createInterface, Interface } from "readline";
-import { ChatGPT } from "../chatgpt";
+import { createInterface, Interface } from 'readline';
+import { ChatGPT } from '../chatgpt';
 
 const question = (
   rl: Interface,
@@ -28,12 +28,12 @@ async function main() {
     output: process.stdout,
   });
 
-  let input: string = "";
+  let input: string = '';
   while (true) {
-    input = await question(rl, { label: "请输入您的问题: " });
+    input = await question(rl, { label: '请输入您的问题: ' });
     await chat.sendMessage(input);
 
-    if (input === "quit") {
+    if (input === 'quit') {
       break;
     }
   }

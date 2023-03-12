@@ -19,6 +19,7 @@
     "openai": "^3.2.1"
   },
   "devDependencies": {
+    "@types/node": "^18.15.0",
     "concurrently": "^7.6.0",
     "electron": "^23.1.2",
     "electron-builder": "^23.6.0",

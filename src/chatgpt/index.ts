@@ -80,7 +80,7 @@ export class ChatGPT {
         role: 'user',
         content: message,
       });
-
+      
       const res = await this._api!.createChatCompletion(
         {
           model: 'gpt-3.5-turbo',

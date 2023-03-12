@@ -1,4 +1,4 @@
-import { screen } from "electron";
+import { screen } from 'electron';
 
 export const defaultSize = {
   width: 700,
@@ -18,6 +18,6 @@ export class SizeDetector {
   }
 
   get fullHeight() {
-    return (screen.getPrimaryDisplay().workAreaSize.height * 2) / 3;
+    return Math.floor((screen.getPrimaryDisplay().workAreaSize.height * 2) / 3);
   }
 }

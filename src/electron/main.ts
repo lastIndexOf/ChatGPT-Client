@@ -34,14 +34,6 @@ app.on('ready', () => {
   }
 
   // 全局快捷键
-  globalShortcut.register('Escape', () => {
-    if (mainWindow.isVisible()) {
-      mainWindow.hide();
-      if (process.platform === 'darwin') {
-        app.dock.hide();
-      }
-    }
-  });
   globalShortcut.register('CommandOrControl+Shift+Space', () => {
     if (mainWindow.isVisible()) {
       mainWindow.hide();
